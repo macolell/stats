@@ -1,0 +1,44 @@
+find_sample_size <- function(ci, sd, margin_of_error) {
+  if (ci==90) {
+    ci = 1.645}
+  else if (ci == 99) {
+    ci = 2.576}
+  else {
+    ci = 1.96}
+  result = (ci ** 2 * sd ** 2) / margin_of_error ** 2
+  return(ceiling(result))
+}
+
+find_prop_sample_size <- function(ci, prop, margin_of_error) {
+  if (ci==90) {
+    ci = 1.645}
+  else if (ci == 99) {
+    ci = 2.576}
+  else {
+    ci = 1.96}
+  result = (ci ** 2 * (prop * (1 - prop)))/margin_of_error ** 2
+  return(ceiling(result))
+}
+find_prop_sample_size(95, .5, .03)
+
+t_table <- read_csv("/Users/michaelcolellajensen/Desktop/R/t_table.csv")
+t_table <- t_table%>%
+  transmute(`degrees_of_freedom` = `degrees_of)_freedom`,
+            ci_90 = ci_90,
+            ci_95 = ci_95,
+            ci_99 = ci_99)
+
+find_ci <- function(sample_mean, ci, sample_sd, sample_size) {
+  if (ci == 90) {
+    ci = t_table$ci_90[(sample_size - 1)]
+  }
+  else if (ci == 99) {
+    ci = t_table$ci_99[(sample_size - 1)]
+  }
+  else {
+    ci = t_table$ci_95[(sample_size - 1)]
+  }
+  result = c((sample_mean + (ci * (sample_sd/sqrt(sample_size)))), (sample_mean - (ci * (sample_sd/sqrt(sample_size)))))
+  return(result)
+}
+find_ci(346.5, 95, 170.38, 20)
